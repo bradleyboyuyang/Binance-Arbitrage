@@ -1,5 +1,5 @@
 '''
-@Description: Basis-Trading bot
+@Description: Binance Arbitrage Bot
 @Author: Yang Boyu
 @Email: bradleyboyuyang@gmail.com
 '''

@@ -20,7 +20,6 @@ def init_argparse():
     parser.add_argument('--multiplier', type=dict, default=multiplier, help='expiration date')
 
     # commissionRate
-    # https://www.binance.com/en/fee/trading
     # BTC-related: 0; 25% off using BNB; BUSD pairs maker: 0
     parser.add_argument('--spot_fee_rate', type=float, default=1/1000)
     parser.add_argument('--contract_fee_rate', type=float, default=1/10000, help="maker: 0.01%, taker: 0.05%")

@@ -76,8 +76,8 @@ The code is well-organized for further extention to OKX, bitfinex, etc.
 
 But take care of the following information before employment:
 1. Open universal account transfer for your API
-2. Check your [Multiplier for coin-margin](https://www.binance.com/zh-CN/futures/trading-rules/quarterly)
-3. Check your [Trading fee](https://www.binance.com/en/fee/trading)
+2. Check your [multiplier for coin-margin](https://www.binance.com/zh-CN/futures/trading-rules/quarterly)
+3. Check your [trading fee](https://www.binance.com/en/fee/trading)
 4. `TimeInForce`: choices for placing orders
    - GTC - Good Till Cancel 
    - IOC - Immediate or Cancel 

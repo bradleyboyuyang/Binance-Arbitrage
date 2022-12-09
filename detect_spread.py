@@ -22,7 +22,7 @@ class BA(ccxt.binance):
         markets = self.load_markets()
         for symbol in self.dapiPublicGetExchangeInfo()['symbols']:
             future_symbol = symbol['symbol']
-
+            # delivery date
             if '12' in future_symbol:
                 spot_symbol = future_symbol[0:-10] + '/USDT'
                 symbols[future_symbol[0:-10]] = (future_symbol,

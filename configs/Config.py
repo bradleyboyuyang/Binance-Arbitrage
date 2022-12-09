@@ -13,7 +13,7 @@ BINANCE_CONFIG = {
     'enableRateLimit': False}
 
 # coin-margin multiplier
-# https://www.binance.com/zh-CN/futures/trading-rules/quarterly
+# add your target coin here
 multiplier = {
     'BTC': 100,  # 1 contract = 100USD
     'EOS': 10,  # 1 contract = 10USD

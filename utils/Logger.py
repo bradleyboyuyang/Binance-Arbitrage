@@ -4,9 +4,9 @@
 @Email: bradleyboyuyang@gmail.com
 '''
 
+import time
 import logging
 import coloredlogs
-import time
 
 def add_logger_filehandler(logger: logging.Logger, log_file: str, level: int = logging.DEBUG,
                            fmt: str = '%(asctime)s %(filename)s(%(lineno)d):%(funcName)s %(levelname)s %(message)s', datefmt: str = '%Y-%m-%d %H:%M:%S') -> bool:
