@@ -37,10 +37,10 @@ exchange = ccxt.binance()
 data = exchange.fetch_ticker(symbol='BTC/USDT')
 print(data)
 ```
-2. install other required packages, such as pandas, coloredlogs
+2. Install other required packages, such as pandas, coloredlogs
 
 
-### 2. Fill in Hyperparameter for Arbitrage Bot
+### 2. Fill in Hyperparameters for Arbitrage Bot
 1. Fill your api key and secret in `Config.py`
 2. Change the hyperparameters in `detect_spread.py`
 3. Change the hyperparameters in `basis_trading.py`
@@ -55,7 +55,7 @@ python detect_spread.py
 # Arbitrage trading
 python basis_trading.py --coin 'BTC' --future_date '221230' --amount 1000 --threshold 0.02
 
-# Adjust hyperparameters for your need:
+# Hyperparameter settings:
     --coin                 Trading Target
     --future_date          expiration date for delivery contract
     --coin_precision       price precision (decimal points)
@@ -67,6 +67,7 @@ python basis_trading.py --coin 'BTC' --future_date '221230' --amount 1000 --thre
     --num_maximum          maximum execution numbers
     --threshold            opening/closing threshold
 ```
+Adjust hyperparameters for your need.
 
 ## Notes
 The code is well-organized for further extention to OKX, bitfinex, etc.
@@ -85,11 +86,12 @@ But take care of the following information before employment:
 
 ## Real Trading Sample
 
-### Account Transfer
+**Account Transfer**
+
 <img src='./imgs/demo2.png' width=90% height=50% />
 
 
-### Close Positions
+**Close Positions**
 
 <img src='./imgs/demo1.png' width=90% height=50% />
 
