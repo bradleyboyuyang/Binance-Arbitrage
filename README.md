@@ -17,42 +17,43 @@
    3. Close long in Spot account
 
 ### 2. Scripts
-- `basis_trading.py`：Open/Close positions
 - `Config.py`：Account & multiplier information
 - `BinanceArb.py`: Arbitrage bot for Binance
 - `Logger.py`：Logger configuration
+- `detect_spread.py`：Spread detection
+- `basis_trading.py`：Open/Close positions
 
 ## Getting Started
 
 ### 1. Install Prerequisites
-1. `conda create -n binance_arb python=3.8`
-2. `pip install ccxt`
-3. `pip install urllib3==1.25.8`
-4. install other required packages, such as pandas, coloredlogs
-5. Check whether installation is successful:
+1. Install CCXT:
+   1. `conda create -n binance_arb python=3.8`
+   2. `pip install ccxt`
+   3. `pip install urllib3==1.25.8`
+   4. Check whether installation is successful:
 ```Python
 import ccxt
 exchange = ccxt.binance()
 data = exchange.fetch_ticker(symbol='BTC/USDT')
 print(data)
 ```
+2. install other required packages, such as pandas, coloredlogs
+
 
 ### 2. Fill in Hyperparameter for Arbitrage Bot
 1. Fill your api key and secret in `Config.py`
 2. Change the hyperparameters in `detect_spread.py`
-4. Change the hyperparameters in `basis_trading.py`
+3. Change the hyperparameters in `basis_trading.py`
 
 
 ### 3. Execute Arbitrage
 Run the following command in terminal:
 ```
-
 # Price detection
 python detect_spread.py
 
 # Arbitrage trading
 python basis_trading.py --coin 'BTC' --future_date '221230' --amount 1000 --threshold 0.02
-
 
 # Adjust hyperparameters for your need:
     --coin                 Trading Target
@@ -66,7 +67,6 @@ python basis_trading.py --coin 'BTC' --future_date '221230' --amount 1000 --thre
     --num_maximum          maximum execution numbers
     --threshold            opening/closing threshold
 ```
-
 
 ## Notes
 The code is well-organized for further extention to OKX, bitfinex, etc.
