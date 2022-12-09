@@ -1,9 +1,9 @@
 # Binance-Arbitrage
 Binance arbitrage bot - opportunity detector & automated trading for cash-and-carry arbitrage
 
-**Note: The arbitrage toolbox will be regularly upgraded with more functionalities, it's recommended to star the repo, not fork, to follow up with the latest updates!**
-
 <img src='./imgs/demo3.png' width=90% height=50% />
+
+**The arbitrage toolbox will be regularly upgraded with more functionalities, it's recommended to star the repo, not fork, to follow up with the latest updates!**
 
 ## Basics
 
