@@ -5,7 +5,7 @@ Binance arbitrage bot - opportunity detector & automated trading
 
 - Currently support: cash-and-carry arbitrage
 - Current functionalities: spread detection, placing orders, account transfer, colored logging, etc.
-- **The toolbox will be regularly upgraded with more functionalities, it's recommended to star the repo, not fork, to follow up with the latest updates!**
+- **The toolbox will be regularly upgraded with more functionalities, it's recommended to star the repo, not fork, to follow up with the latest updates**
 
 ## Basics
 
