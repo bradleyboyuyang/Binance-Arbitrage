@@ -8,7 +8,6 @@ import ccxt
 import time
 import traceback
 
-from utils.Notifier import send_dd_msg
 from utils.Logger import LOGGER
 
 
@@ -53,8 +52,6 @@ class BinanceArbBot:
                 time.sleep(sleep_seconds)
         else:
             self.logger.critical(f"{act_name} FAIL too many times... Arbitrage STOPs!")
-            send_dd_msg(f"[Basis-Trading-Robot]\n\n {act_name} FAIL too many times... Arbitrage STOPs!\n\n" + 
-            'Function parameters: \n' + str(params))
             if is_exit: exit()
 
     def binance_spot_place_order(self, symbol: str, direction: str, price: float, amount: float):
@@ -88,10 +85,10 @@ class BinanceArbBot:
 
         TimeInForce parameter: 
         
-        GTC - Good Till Cancel 成交为止
-        IOC - Immediate or Cancel 无法立即成交(吃单)的部分就撤销
-        FOK - Fill or Kill 无法全部立即成交就撤销
-        GTX - Good Till Crossing 无法成为挂单方就撤销
+        GTC - Good Till Cancel 
+        IOC - Immediate or Cancel 
+        FOK - Fill or Kill 
+        GTX - Good Till Crossing 
 
         """
 
