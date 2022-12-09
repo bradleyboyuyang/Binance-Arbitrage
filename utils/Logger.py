@@ -38,7 +38,3 @@ def get_logger(log_name: str, log_level: int = logging.DEBUG, log_file: str = No
 def get_local_timezone() -> str:
     """get local time zone"""
     return time.strftime('%z')
-
-
-# logger
-LOGGER = get_logger(log_name='Basis-Trading')

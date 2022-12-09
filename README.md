@@ -1,7 +1,7 @@
 # Binance-Arbitrage
  Binance arbitrage bot using CCXT - opportunity detector & automated trading for cash-and-carry arbitrage
 
-<img src='./imgs/demo2.png' width=90% height=50% />
+<img src='./imgs/demo3.png' width=90% height=50% />
 
 ## Basics
 
@@ -18,12 +18,9 @@
 
 ### 2. Scripts
 - `basis_trading.py`：Open/Close positions
-- `Configs`: configuration
-  - `Config.py`：Account & multiplier information
-- `modules`：Collection of exchanges
-  - `BinanceArb.py`: Arbitrage bot for Binance
-- `utils`：
-  - `Logger.py`：Logger configuration
+- `Config.py`：Account & multiplier information
+- `BinanceArb.py`: Arbitrage bot for Binance
+- `Logger.py`：Logger configuration
 
 ## Getting Started
 
@@ -42,30 +39,60 @@ print(data)
 
 ### 2. Fill in Hyperparameter for Arbitrage Bot
 1. Fill your api key and secret in `Config.py`
-2. Fill your hyperparameters in `basis_trading.py`
+2. Change the hyperparameters in `detect_spread.py`
+4. Change the hyperparameters in `basis_trading.py`
 
 
 ### 3. Execute Arbitrage
-Simply run the following command in terminal:
+Run the following command in terminal:
 ```
+
+# Price detection
+python detect_spread.py
+
+# Arbitrage trading
 python basis_trading.py --coin 'BTC' --future_date '221230' --amount 1000 --threshold 0.02
+
+
+# Adjust hyperparameters for your need:
+    --coin                 Trading Target
+    --future_date          expiration date for delivery contract
+    --coin_precision       price precision (decimal points)
+    --slippage             slippage (proportion of coin price)
+    --spot_fee_rate        commission rate for spot
+    --contract_fee_rate    commission rate for contract
+    --max_trial            maximum trial for stable connections
+    --amount               trading amount for one iteration
+    --num_maximum          maximum execution numbers
+    --threshold            opening/closing threshold
 ```
-Adjust hyperparameters for your personal need. 
+
 
 ## Notes
-The code is prepared with detailed comments and is well-organized for further extention (e.g. to other exchanges).
+The code is well-organized for further extention to OKX, bitfinex, etc.
 
 But take care of the following information before employment:
 1. Open universal account transfer for your API
 2. Check your [Multiplier for coin-margin](https://www.binance.com/zh-CN/futures/trading-rules/quarterly)
 3. Check your [Trading fee](https://www.binance.com/en/fee/trading)
-5. `TimeInForce`: choices for placing orders
+4. `TimeInForce`: choices for placing orders
    - GTC - Good Till Cancel 
    - IOC - Immediate or Cancel 
    - FOK - Fill or Kill 
    - GTX - Good Till Crossing 
-6. Internet connections and error handling
+5. Internet connections and error handling
 
 
-## Arbitrage Sample
+## Real Trading Sample
+
+### Account Transfer
+<img src='./imgs/demo2.png' width=90% height=50% />
+
+
+### Close Positions
+
 <img src='./imgs/demo1.png' width=90% height=50% />
+
+## License
+
+Code released under the [MIT License](https://opensource.org/licenses/MIT).

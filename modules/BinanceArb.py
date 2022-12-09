@@ -8,13 +8,12 @@ import ccxt
 import time
 import traceback
 
-from utils.Logger import LOGGER
-
+from utils.Logger import get_logger
 
 class BinanceArbBot:
     def __init__(self, exchange: ccxt.binance, coin: str, future_date: str, coin_precision: float, 
                  slippage: float, spot_fee_rate: float, contract_fee_rate: float, multiplier: dict, 
-                 amount: float, num_maximum: int, threshold: float, max_trial: int, logger=LOGGER):
+                 amount: float, num_maximum: int, threshold: float, max_trial: int):
                  
         self.exchange = exchange
         self.coin = coin
@@ -28,16 +27,14 @@ class BinanceArbBot:
         self.num_maximum = num_maximum
         self.threshold = threshold
         self.max_trial = max_trial
-        self.logger = logger
+        self.logger = get_logger("Basis-Trading Starts")
 
-        # symbols to be used as parameters
         self.spot_symbol = {'type1': coin + 'USDT', 'type2': coin + '/USDT'}
         self.future_symbol = {'type1': coin + 'USD_' + future_date}
 
 
     def retry_wrapper(self, func, params=dict(), act_name='', sleep_seconds=1, is_exit=True):
-        """retry for stable connections with exchanges"""
-
+        
         for _ in range(self.max_trial):
             try:
                 # NOTE: reset the local timestamp when requesting again，otherwise requests may be declined
@@ -55,13 +52,6 @@ class BinanceArbBot:
             if is_exit: exit()
 
     def binance_spot_place_order(self, symbol: str, direction: str, price: float, amount: float):
-        """
-        :description: placing limit orders in spot account
-        :param symbol: spot symbol, eg. `BTC/USDT`
-        :param direction:  `long` or `short`
-        :param price:  spot open price
-        :param amount: spot open amount
-        """
 
         if direction == 'long':
             order_info = self.exchange.create_limit_buy_order(symbol, amount, price)
@@ -76,21 +66,6 @@ class BinanceArbBot:
 
 
     def binance_future_place_order(self, symbol: str, direction: str, price: float, amount: int):
-        """
-        :description: placing limit orders in coin-margin account
-        :param symbol: coin-margin symbol, eg. `BTCUSD_210625`
-        :param direction:  `open_long` or `open_short` or `close_long` or `close_short`
-        :param price: coin-margin open price
-        :param amount: coin-margin open amount (number of contracts, integer)
-
-        TimeInForce parameter: 
-        
-        GTC - Good Till Cancel 
-        IOC - Immediate or Cancel 
-        FOK - Fill or Kill 
-        GTX - Good Till Crossing 
-
-        """
 
         if direction == 'open_short':
             side = 'SELL'
@@ -105,8 +80,8 @@ class BinanceArbBot:
             'symbol': symbol,
             'type': 'LIMIT',
             'price': price, 
-            'quantity': amount,  # number of contracts
-            'timeInForce': 'GTC',  # check API
+            'quantity': amount,  
+            'timeInForce': 'GTC',
         }
         params['timestamp'] = int(time.time() * 1000)
         order_info = self.exchange.dapiPrivatePostOrder(params)
@@ -118,7 +93,6 @@ class BinanceArbBot:
 
     def binance_account_transfer(self, currency: str, amount, from_account='spot', to_account='coin-margin'):
         """
-        User Universal Transfer between spot account and coin-margin account
         POST /sapi/v1/asset/transfer (HMAC SHA256)
         """
 
@@ -142,35 +116,28 @@ class BinanceArbBot:
         return transfer_info
 
     def open_position(self):
-        """open positions for basis trading"""
         execute_num = 0
 
         while True:
-            # get the best ask for spot
             spot_ask1 = self.exchange.publicGetTickerBookTicker(params={'symbol': self.spot_symbol['type1']})['askPrice']
 
-            # get the best bid for coin-margin
             coin_bid1 = self.exchange.dapiPublicGetTickerBookTicker(params={'symbol': self.future_symbol['type1']})[0]['bidPrice']
 
-            # detect price difference
             r = float(coin_bid1) / float(spot_ask1) - 1
             operator = '>' if spot_ask1 > coin_bid1 else '<'
             self.logger.info('Spot %.4f %s COIN-M %.4f -> Price Difference: %.4f%%' % (float(spot_ask1), operator, float(coin_bid1), r * 100))
 
-            # whether to start arbitrage (must be contango)
             if r < self.threshold:
                 self.logger.info('Price difference SMALLER than threshold >>> Retrying...')
             else:
                 self.logger.debug('Price difference LARGER than threshold >>> Starting arbitrage...')
 
-                # long spot, short coin-margin
                 contract_num = int(self.amount / self.multipler[self.coin])  
                 contract_coin_num = contract_num * self.multipler[self.coin] / float(coin_bid1)  
                 contract_fee = contract_coin_num * self.contract_fee_rate  
                 spot_amount = contract_coin_num / (1 - self.spot_fee_rate) + contract_fee  
                 self.logger.debug(f'Arbitrage starts >>> future cotract num {contract_num} > coin-margin num {contract_coin_num} > fee {contract_fee} > spot amount {spot_amount}')
 
-                # TODO: limit long order (spot) with slippage
                 price = float(spot_ask1) * (1 + self.slippage)
                 params = {
                     'symbol': self.spot_symbol['type2'],
@@ -180,7 +147,6 @@ class BinanceArbBot:
                 }
                 spot_order_info = self.retry_wrapper(func=self.binance_spot_place_order, params=params, act_name='Long spot orders')
 
-                # TODO: limit short order (coin-margin) with slippage
                 price = float(coin_bid1) * (1 - self.slippage)
                 price = round(price, self.coin_precision)
                 params = {
@@ -191,14 +157,12 @@ class BinanceArbBot:
                 }
                 future_order_info = self.retry_wrapper(func=self.binance_future_place_order, params=params, act_name='Short coin-margin orders')
 
-                # NOTE: it is possible that the spot account has not yet updated 
                 time.sleep(2) 
 
                 balance = self.exchange.fetch_balance()
                 num = balance[self.coin]['free']
                 self.logger.debug(f'Amount to be transfered > {num}')
 
-                # transfer from spot account to coin-margin account
                 params = {
                     'currency': self.coin,
                     'amount': num,
@@ -214,8 +178,6 @@ class BinanceArbBot:
                 print(spot_order_info['average'])
                 print(future_order_info)
 
-            # logger.info('*'* 25 + "Current loop finishes" + '*'*25)
-
             time.sleep(2)
 
             if execute_num >= self.num_maximum:
@@ -224,50 +186,40 @@ class BinanceArbBot:
 
     def close_position_utils(self):
         """close positions for basis trading"""
-        # get USDT balance in spot account
         balance = self.exchange.fetch_balance()
         num = balance['USDT']['free']
         self.logger.info(f'Amount of USDT in spot account：{num}')
 
-        # get coin-margin balance spot account
         balance = self.exchange.fetch_balance()
         num = balance[self.coin]['free']
         self.logger.info(f'Amount of {self.coin} in coin-margin account：{num}')
 
         if num < self.amount:
             self.logger.error('Please ensure the coin-margin remaining balance is enough!')
-            # exit()
 
         now_execute_num = 0
 
         while True:
-            # get the best ask for spot
             spot_ask1 = self.exchange.publicGetTickerBookTicker(params={'symbol': self.spot_symbol['type1']})['bidPrice']
             spot_ask1 = float(spot_ask1)
-            # get the best bid for coin-margin
             coin_bid1 = self.exchange.dapiPublicGetTickerBookTicker(params={'symbol': self.future_symbol['type1']})[0]['askPrice']
             coin_bid1 = float(coin_bid1)
 
-            # detect price difference
             r = coin_bid1 / spot_ask1 - 1
             operator = '>' if spot_ask1 > coin_bid1 else '<'
             self.logger.info('Spot %.4f %s COIN-M %.4f -> Price Difference: %.4f%%' % (float(spot_ask1), operator, float(coin_bid1), r * 100))
 
-            # whether to stop arbitrage
             if r > self.threshold:
                 self.logger.info('Price difference LARGER than threshold >>> Retrying...')
             else:
                 self.logger.debug('Price difference SMALLER than threshold >>> Stopping arbitrage...')
 
-                # close long for spot, close short for coin-margin
                 contract_num = int(coin_bid1 * self.amount / self.multipler[self.coin]) 
                 contract_coin_num = contract_num * self.multipler[self.coin] / coin_bid1 
                 contract_fee = contract_coin_num * self.contract_fee_rate 
-                spot_amount = contract_coin_num - contract_fee  # spot selling amount = contract coin num - contract fee
-                # spot_amount = round(spot_amount, 3)
+                spot_amount = contract_coin_num - contract_fee 
                 self.logger.debug(f'Closing contract num {contract_num} > equivalent coin num {contract_coin_num} > contract fee {contract_fee} > spot selling amount {spot_amount}')
 
-                # TODO: limit long order (coin-margin) with slippage
                 price = coin_bid1 * (1 + self.slippage)
                 price = round(price, self.coin_precision)
 
@@ -279,7 +231,6 @@ class BinanceArbBot:
                 }
                 future_order_info = self.retry_wrapper(func=self.binance_future_place_order, params=params, act_name='Close short coin-margin orders')
 
-                # TODO: limit short order (spot) with slippage
                 price = spot_ask1 * (1 - self.slippage)
                 params = {
                     'symbol': self.spot_symbol['type2'],
@@ -289,10 +240,8 @@ class BinanceArbBot:
                 }
                 spot_order_info = self.retry_wrapper(func=self.binance_spot_place_order, params=params, act_name='Long spot orders')
 
-                # NOTE: it is possible that the coin-margin account has not yet updated 
                 time.sleep(2)
 
-                # transfer from coin-margin to spot account (for preparation)
                 params = {
                     'currency': self.coin,
                     # 'amount': self.amount,
@@ -309,7 +258,6 @@ class BinanceArbBot:
 
             self.logger.info(f"Number of closing executions: {now_execute_num}")
 
-            # logger.info('*'* 25 + "Current loop finishes" + '*'*25)
             time.sleep(2)
 
             if now_execute_num >= self.num_maximum:

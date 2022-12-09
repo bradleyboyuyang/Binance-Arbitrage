@@ -4,15 +4,12 @@
 @Email: bradleyboyuyang@gmail.com
 '''
 
-# NOTE: the API should open user universal transfer
 BINANCE_CONFIG = {
     'apiKey': '',
     'secret': '',
     'timeout': 3000,
     'rateLimit': 10,
     'verbose': False,
-    'hostname': 'binancezh.com', 
-    # 'proxies': {'http': 'http://127.0.0.1:7890', 'https': 'https://127.0.0.1:7890'}
     'enableRateLimit': False}
 
 # coin-margin multiplier

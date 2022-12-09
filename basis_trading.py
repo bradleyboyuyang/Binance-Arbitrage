@@ -11,7 +11,6 @@ from configs.Config import *
 from modules.BinanceArb import BinanceArbBot
 
 def init_argparse():
-    """Hyperparameters for Basis Trading"""
     parser = argparse.ArgumentParser()
     parser.add_argument('--exchange', default=ccxt.binance(BINANCE_CONFIG), help='exchange')
     parser.add_argument('--coin', type=str, default='ada'.upper())
@@ -33,7 +32,6 @@ if __name__ == '__main__':
 
     # ***open positions***
     position_parser = init_argparse()
-    # NOTE: 1.should be multiplier of 100 (btc) or 10 (others) 2.cannot be too large (market impact) 3.suggest 1000-3000 USDT
     position_parser.add_argument('--amount', type=int, default=20, help="spot trading amount for one iteration")
     position_parser.add_argument('--num_maximum', type=int, default=3, help="maximum execution numbers")
     position_parser.add_argument('-f', '--threshold', type=int, default=0.025, help="opening threshold")
@@ -45,7 +43,6 @@ if __name__ == '__main__':
 
     # ***close positions***
     # position_parser = init_argparse()
-    # # NOTE: 1.cannot be too large (market impact) 2.ensure the coin-margin account has enough balance
     # position_parser.add_argument('--amount', type=float, default=10, help="number of coins for one iteration")
     # position_parser.add_argument('--num_maximum', type=int, default=3, help="maximum execution numbers")
     # position_parser.add_argument('--threshold', type=int, default=0.0005, help="closing threshold")
