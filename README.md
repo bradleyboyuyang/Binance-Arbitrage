@@ -1,5 +1,7 @@
 # Binance-Arbitrage
- Binance arbitrage bot using CCXT - opportunity detector & automated trading for cash-and-carry arbitrage
+Binance arbitrage bot - opportunity detector & automated trading for cash-and-carry arbitrage
+
+**Note: The arbitrage toolbox will be regularly upgraded with more functionalities, it's recommended to star the repo, not fork, to follow up with the latest updates!**
 
 <img src='./imgs/demo3.png' width=90% height=50% />
 
@@ -69,7 +71,7 @@ python basis_trading.py --coin 'BTC' --future_date '221230' --amount 1000 --thre
 ```
 Adjust hyperparameters for your need.
 
-## Notes
+## Important
 The code is well-organized for further extention to OKX, bitfinex, etc.
 
 But take care of the following information before employment:
@@ -84,7 +86,7 @@ But take care of the following information before employment:
 5. Internet connections and error handling
 
 
-## Real Trading Sample
+## Real Trading Demo
 
 **Account Transfer**
 
