@@ -1,9 +1,11 @@
 # Binance-Arbitrage
-Binance arbitrage bot - opportunity detector & automated trading for cash-and-carry arbitrage
+Binance arbitrage bot - opportunity detector & automated trading 
 
 <img src='./imgs/demo3.png' width=90% height=50% />
 
-**The arbitrage toolbox will be regularly upgraded with more functionalities, it's recommended to star the repo, not fork, to follow up with the latest updates!**
+- Currently support: cash-and-carry arbitrage
+- Current functionalities: spread detection, placing orders, account transfer, colored logging, etc.
+- **The toolbox will be regularly upgraded with more functionalities, it's recommended to star the repo, not fork, to follow up with the latest updates!**
 
 ## Basics
 
@@ -51,7 +53,7 @@ print(data)
 ### 3. Execute Arbitrage
 Run the following command in terminal:
 ```
-# Price detection
+# Spread detection
 python detect_spread.py
 
 # Arbitrage trading
@@ -61,7 +63,7 @@ python basis_trading.py --coin 'BTC' --future_date '221230' --amount 1000 --thre
     --coin                 Trading Target
     --future_date          expiration date for delivery contract
     --coin_precision       price precision (decimal points)
-    --slippage             slippage (proportion of coin price)
+    --slippage             slippage (proportion of crypto price)
     --spot_fee_rate        commission rate for spot
     --contract_fee_rate    commission rate for contract
     --max_trial            maximum trial for stable connections
@@ -88,12 +90,12 @@ But take care of the following information before employment:
 
 ## Real Trading Demo
 
-**Account Transfer**
+#### **Account Transfer**
 
 <img src='./imgs/demo2.png' width=90% height=50% />
 
 
-**Close Positions**
+#### **Close Positions**
 
 <img src='./imgs/demo1.png' width=90% height=50% />
 
