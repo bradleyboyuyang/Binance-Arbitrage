@@ -1,9 +1,7 @@
 # Binance-Arbitrage
  Binance arbitrage bot using CCXT - opportunity detector & automated trading for cash-and-carry arbitrage
 
-<div align=center>
 <img src='./imgs/demo2.png' width=90% height=50% />
-</div>
 
 ## Basics
 
@@ -70,6 +68,4 @@ But take care of the following information before employment:
 
 
 ## Arbitrage Sample
-<div align=center>
 <img src='./imgs/demo1.png' width=90% height=50% />
-</div>
