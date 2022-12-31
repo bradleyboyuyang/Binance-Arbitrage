@@ -7,8 +7,8 @@
 import argparse
 import ccxt
 
-from configs.Config import *
-from modules.BinanceArb import BinanceArbBot
+from Config import *
+from BinanceArb import BinanceArbBot
 
 def init_argparse():
     parser = argparse.ArgumentParser()

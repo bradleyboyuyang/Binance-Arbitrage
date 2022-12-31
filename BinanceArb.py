@@ -8,7 +8,7 @@ import ccxt
 import time
 import traceback
 
-from utils.Logger import get_logger
+from Logger import get_logger
 
 class BinanceArbBot:
     def __init__(self, exchange: ccxt.binance, coin: str, future_date: str, coin_precision: float, 
