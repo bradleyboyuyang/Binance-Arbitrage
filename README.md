@@ -95,7 +95,3 @@ But take care of the following information before employment:
 #### **Close Positions**
 
 <img src='./imgs/demo1.png' width=90% height=50% />
-
-## License
-
-Code released under the [MIT License](https://opensource.org/licenses/MIT).
